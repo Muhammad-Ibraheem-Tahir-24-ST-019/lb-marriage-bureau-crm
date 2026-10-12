@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AiSetting;
 use App\Models\Bureau;
+use App\Models\Notification;
 use App\Models\Profile;
 use App\Models\Proposal;
 use App\Models\ShareLink;
@@ -58,8 +60,16 @@ class CrmController extends Controller
             $p->links = $links->where('proposal_id', $p->id)->values();
         }
 
+        $user = auth()->user();
+        $notificationsCount = Notification::where('user_id', $user->id)->whereNull('read_at')->count();
+        $canUseAi = (bool) ($user->can_use_ai ?? (method_exists($user, 'canUseAi') ? $user->canUseAi() : false));
+        $aiConfigured = AiSetting::where('is_active', true)->exists();
+
         return response()->json([
-            'user' => auth()->user()->only(['id', 'name', 'email', 'role']), 'bureau' => Bureau::findOrFail($b),
+            'user' => $user->only(['id', 'name', 'email', 'role']), 'bureau' => Bureau::findOrFail($b),
+            'notifications_count' => $notificationsCount,
+            'can_use_ai' => $canUseAi,
+            'ai_configured' => $aiConfigured,
             'profiles' => $profiles, 'proposals' => $proposals, 'work' => WorkItem::where('bureau_id', $b)->orderBy('due_at')->get(),
             'staff' => User::where('bureau_id', $b)->get(['id', 'name', 'email', 'role', 'active']),
             'activities' => DB::table('activities')->where('bureau_id', $b)->latest()->limit(100)->get(),

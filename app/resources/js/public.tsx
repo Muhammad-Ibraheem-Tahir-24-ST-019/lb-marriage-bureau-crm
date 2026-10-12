@@ -36,10 +36,10 @@ export function Brand() {
     return (
         <a className="brand public-brand" href="/">
             <span className="brand-symbol">
-                r<span>h</span>
+                LB
             </span>
             <span>
-                rishtahub<span className="brand-dot">.</span>
+                LB Marriage Bureau<span className="brand-dot">.</span>
             </span>
         </a>
     );
@@ -260,9 +260,9 @@ export function Auth({
                         <p className="auth-switch">
                             {register
                                 ? "Already have an account?"
-                                : "New to Rishtahub?"}{" "}
+                                : "New to LB Marriage Bureau?"}{" "}
                             <a href={register ? "/login" : "/register"}>
-                                {register ? "Sign in" : "Create your bureau"}
+                                {register ? "Sign in" : "Create your bureau account"}
                             </a>
                         </p>
                     )}
@@ -683,7 +683,7 @@ export function Family({ token }: { token: string }) {
             <footer>
                 <ShieldCheck size={16} />
                 Shared with care. Please respect the privacy of these families.
-                <span>Powered by Rishtahub</span>
+                <span>Powered by LB Marriage Bureau</span>
             </footer>
         </div>
     );
@@ -712,7 +712,7 @@ export function Marketing({ user }: { user: Staff | null }) {
                     </Button>
                     <Button asChild>
                         <a href="/register">
-                            Create your bureau
+                            Create your bureau account
                             <ArrowUpRight size={15} />
                         </a>
                     </Button>
@@ -720,7 +720,7 @@ export function Marketing({ user }: { user: Staff | null }) {
             </header>
             {legal ? (
                 <main className="legal-page">
-                    <div className="eyebrow">RISHTAHUB</div>
+                    <div className="eyebrow">LB MARRIAGE BUREAU</div>
                     <h1>
                         {path === "/privacy"
                             ? "Privacy information"
@@ -779,7 +779,7 @@ export function Marketing({ user }: { user: Staff | null }) {
                 <>
                     <section className="hero">
                         <div className="hero-kicker">
-                            <span />A PRIVATE WORKSPACE FOR MARRIAGE BUREAUS
+                            <span />A DEDICATED WORKSPACE FOR LB MARRIAGE BUREAU
                         </div>
                         <h1>
                             Modern tools.
@@ -819,7 +819,7 @@ export function Marketing({ user }: { user: Staff | null }) {
                         </div>
                         <div className="marketing-preview">
                             <div className="preview-sidebar">
-                                <div className="mini-brand">rh.</div>
+                                <div className="mini-brand">LB.</div>
                                 {[
                                     "Overview",
                                     "Profiles",
@@ -1125,7 +1125,7 @@ export function PublicBureau({ bureau }: { bureau: any }) {
                     to discuss an introduction.
                 </div>
             </main>
-            <footer>Powered by Rishtahub · Private by design</footer>
+            <footer>LB Marriage Bureau · Private by design</footer>
         </div>
     );
 }

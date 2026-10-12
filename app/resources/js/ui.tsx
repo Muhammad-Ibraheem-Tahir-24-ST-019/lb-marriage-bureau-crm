@@ -221,14 +221,16 @@ export function Card({
     action,
     children,
     className = "",
+    style,
 }: React.PropsWithChildren<{
     title?: string;
     description?: string;
     action?: React.ReactNode;
     className?: string;
+    style?: React.CSSProperties;
 }>) {
     return (
-        <section className={"card " + className}>
+        <section className={"card " + className} style={style}>
             {title && (
                 <div className="card-heading">
                     <div>

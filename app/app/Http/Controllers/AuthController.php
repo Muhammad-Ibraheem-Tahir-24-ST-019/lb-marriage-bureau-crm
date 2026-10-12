@@ -47,7 +47,18 @@ class AuthController extends Controller
         abort_unless(Auth::attempt([...$data, 'active' => true]), 422, 'The email or password is incorrect.');
         $r->session()->regenerate();
 
-        return response()->json(['ok' => true]);
+        /** @var User $user */
+        $user = Auth::user();
+        $user->last_login_at = now();
+        $user->save();
+
+        $token = method_exists($user, 'createToken') ? $user->createToken('auth-token')->plainTextToken : null;
+
+        return response()->json([
+            'ok' => true,
+            'user' => $user->only(['id', 'name', 'email', 'role', 'can_use_ai']),
+            'token' => $token,
+        ]);
     }
 
     public function register(Request $r)
@@ -61,6 +72,7 @@ class AuthController extends Controller
             $u->password = Hash::make($v['password']);
             $u->bureau_id = $b->id;
             $u->role = 'owner';
+            $u->last_login_at = now();
             $u->save();
 
             return $u;
@@ -68,16 +80,59 @@ class AuthController extends Controller
         Auth::login($u);
         $r->session()->regenerate();
 
-        return response()->json(['ok' => true]);
+        $token = method_exists($u, 'createToken') ? $u->createToken('auth-token')->plainTextToken : null;
+
+        return response()->json([
+            'ok' => true,
+            'user' => $u->only(['id', 'name', 'email', 'role', 'can_use_ai']),
+            'token' => $token,
+        ]);
     }
 
     public function logout(Request $r)
     {
+        if ($user = Auth::user()) {
+            if (method_exists($user, 'currentAccessToken') && $user->currentAccessToken()) {
+                $user->currentAccessToken()->delete();
+            }
+        }
+
         Auth::logout();
         $r->session()->invalidate();
         $r->session()->regenerateToken();
 
         return response()->json(['ok' => true]);
+    }
+
+    public function acceptInvite(Request $request)
+    {
+        $validated = $request->validate([
+            'token' => 'required|string',
+            'name' => 'required|string|max:100',
+            'password' => ['required', 'confirmed', Password::min(8)->letters()->numbers()],
+        ]);
+
+        $user = User::where('invite_token', $validated['token'])->first();
+        abort_unless($user, 404, 'This invitation link is invalid or has expired.');
+
+        $user->name = $validated['name'];
+        $user->password = Hash::make($validated['password']);
+        $user->invite_token = null;
+        $user->email_verified_at = now();
+        $user->last_login_at = now();
+        $user->active = true;
+        $user->save();
+
+        Auth::login($user);
+        $request->session()->regenerate();
+
+        $token = method_exists($user, 'createToken') ? $user->createToken('auth-token')->plainTextToken : null;
+
+        return response()->json([
+            'ok' => true,
+            'user' => $user->only(['id', 'name', 'email', 'role', 'can_use_ai']),
+            'token' => $token,
+        ]);
     }
 
     public function accept(Request $r, string $token)
@@ -93,6 +148,7 @@ class AuthController extends Controller
             $u->password = Hash::make($v['password']);
             $u->bureau_id = $i->bureau_id;
             $u->role = $i->role;
+            $u->last_login_at = now();
             $u->save();
             DB::table('staff_invites')->where('id', $i->id)->update(['accepted_at' => now()]);
 
@@ -101,6 +157,12 @@ class AuthController extends Controller
         Auth::login($u);
         $r->session()->regenerate();
 
-        return response()->json(['ok' => true]);
+        $token = method_exists($u, 'createToken') ? $u->createToken('auth-token')->plainTextToken : null;
+
+        return response()->json([
+            'ok' => true,
+            'user' => $u->only(['id', 'name', 'email', 'role', 'can_use_ai']),
+            'token' => $token,
+        ]);
     }
 }

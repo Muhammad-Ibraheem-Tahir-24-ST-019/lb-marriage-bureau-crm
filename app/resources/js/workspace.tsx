@@ -25,9 +25,22 @@ import {
     X,
     Building2,
     LifeBuoy,
+    Bot,
+    StickyNote,
+    MessageSquare,
+    Shield,
 } from "lucide-react";
-import type { State } from "./types";
-import { api, initials, isDone, date } from "./lib";
+import type { State, AppNotification } from "./types";
+import {
+    api,
+    initials,
+    isDone,
+    date,
+    timeAgo,
+    getNotifications,
+    markNotificationRead,
+    markAllNotificationsRead,
+} from "./lib";
 import { Button, Loading, ErrorBox, Modal, useToast, Empty } from "./ui";
 import { Dashboard, Reports } from "./dashboard";
 import { Profiles, ProfileDetail, ProfileEditor, Matching } from "./profiles";
@@ -39,6 +52,10 @@ import {
     WorkForm,
 } from "./workflow";
 import { SettingsPage, StaffPage, NetworkPage } from "./settings";
+import { AiChatPage } from "./ai-chat";
+import { NotesPage } from "./notes";
+import { TeamPage } from "./team";
+import { AdminPage } from "./admin";
 type Context = {
     data: State;
     refresh: () => Promise<void>;
@@ -49,28 +66,6 @@ type Context = {
 };
 const Context = createContext<Context>(null!);
 export const useWorkspace = () => useContext(Context);
-const navigation: [string, [string, typeof Users, string][]][] = [
-    [
-        "Workspace",
-        [
-            ["Overview", LayoutDashboard, ""],
-            ["Profiles", Users, "profiles"],
-            ["Smart matching", HeartHandshake, "matching"],
-            ["Proposals", Send, "proposals"],
-            ["Follow-ups", CalendarClock, "followups"],
-            ["Meetings", CalendarDays, "meetings"],
-        ],
-    ],
-    [
-        "Organization",
-        [
-            ["Bureau network", Network, "network"],
-            ["Reports", ChartNoAxesCombined, "reports"],
-            ["Staff & roles", Users, "staff"],
-            ["Settings", Settings, "settings"],
-        ],
-    ],
-];
 export default function Workspace({ demo }: { demo: boolean }) {
     const [data, setData] = useState<State | null>(null),
         [error, setError] = useState(""),
@@ -81,14 +76,23 @@ export default function Workspace({ demo }: { demo: boolean }) {
         ),
         [search, setSearch] = useState(""),
         [theme, setTheme] = useState(
-            localStorage.getItem("rishtahub-theme") || "light",
-        );
+            localStorage.getItem("lb-theme") || "light",
+        ),
+        [notifications, setNotifications] = useState<AppNotification[]>([]),
+        [notifOpen, setNotifOpen] = useState(false);
     const toast = useToast();
     const refresh = async () => {
         setData(await api<State>("/state"));
     };
+    const loadNotifs = async () => {
+        try {
+            const res = await getNotifications();
+            setNotifications(res.notifications || []);
+        } catch {}
+    };
     useEffect(() => {
         refresh().catch((e) => setError(e.message));
+        loadNotifs();
         const pop = () => setPath(location.pathname.replace(/^\/app\/?/, ""));
         addEventListener("popstate", pop);
         return () => removeEventListener("popstate", pop);
@@ -101,7 +105,7 @@ export default function Workspace({ demo }: { demo: boolean }) {
                 theme === "dark" || (theme === "system" && media.matches),
             );
         apply();
-        localStorage.setItem("rishtahub-theme", theme);
+        localStorage.setItem("lb-theme", theme);
         media.addEventListener("change", apply);
         return () => media.removeEventListener("change", apply);
     }, [theme]);
@@ -148,9 +152,47 @@ export default function Workspace({ demo }: { demo: boolean }) {
         count = data.work.filter(
             (w) => w.kind === "followup" && !isDone(w.status),
         ).length;
+    const navGroups: [string, [string, any, string][]][] = [
+        [
+            "Workspace",
+            [
+                ["Overview", LayoutDashboard, ""],
+                ["Profiles", Users, "profiles"],
+                ["Smart matching", HeartHandshake, "matching"],
+                ["Proposals", Send, "proposals"],
+                ["Follow-ups", CalendarClock, "followups"],
+                ["Meetings", CalendarDays, "meetings"],
+                ["Notes", StickyNote, "notes"],
+                ["Team", MessageSquare, "team"],
+                ...(data.user.can_use_ai !== false
+                    ? [["AI Assistant", Bot, "ai"] as [string, any, string]]
+                    : []),
+            ],
+        ],
+        [
+            "Organization",
+            [
+                ["Bureau network", Network, "network"],
+                ["Reports", ChartNoAxesCombined, "reports"],
+                ["Staff & roles", Users, "staff"],
+                ...(["admin", "superadmin", "owner"].includes(data.user.role)
+                    ? [["Admin", Shield, "admin"] as [string, any, string]]
+                    : []),
+                ["Settings", Settings, "settings"],
+            ],
+        ],
+    ];
     const activeName =
-        navigation.flatMap((g) => g[1]).find((i) => i[2] === base)?.[0] ||
-        "Profile details";
+        navGroups.flatMap((g) => g[1]).find((i) => i[2] === base)?.[0] ||
+        (base === "ai"
+            ? "AI Assistant"
+            : base === "notes"
+              ? "Notes"
+              : base === "team"
+                ? "Team"
+                : base === "admin"
+                  ? "Admin"
+                  : "Profile details");
     const close = () => setModal(null);
     const logout = async () => {
         try {
@@ -180,10 +222,10 @@ export default function Workspace({ demo }: { demo: boolean }) {
                         }}
                     >
                         <span className="brand-symbol">
-                            r<span>h</span>
+                            LB
                         </span>
                         <span>
-                            rishtahub<span className="brand-dot">.</span>
+                            LB Marriage Bureau<span className="brand-dot">.</span>
                         </span>
                         <PanelLeftClose className="brand-collapse" size={16} />
                     </a>
@@ -201,7 +243,7 @@ export default function Workspace({ demo }: { demo: boolean }) {
                         <ChevronDown size={14} />
                     </button>
                     <nav aria-label="Main navigation">
-                        {navigation.map(([label, items]) => (
+                        {navGroups.map(([label, items]) => (
                             <div className="nav-group" key={label}>
                                 <div className="nav-label">{label}</div>
                                 {items.map(([text, Icon, url]) => (
@@ -311,14 +353,111 @@ export default function Workspace({ demo }: { demo: boolean }) {
                                     </button>
                                 ))}
                             </div>
-                            <button
-                                className="notification-button"
-                                aria-label="Notifications"
-                                onClick={() => open("notifications")}
-                            >
-                                <Bell size={19} />
-                                {count > 0 && <i />}
-                            </button>
+                            <div style={{ position: "relative" }}>
+                                <button
+                                    className="notification-button"
+                                    aria-label="Notifications"
+                                    onClick={() => setNotifOpen(!notifOpen)}
+                                >
+                                    <Bell size={19} />
+                                    {(notifications.filter((n) => !n.read_at).length > 0 || count > 0) && (
+                                        <i />
+                                    )}
+                                </button>
+                                {notifOpen && (
+                                    <div
+                                        className="card"
+                                        style={{
+                                            position: "absolute",
+                                            right: 0,
+                                            top: 40,
+                                            width: 320,
+                                            maxHeight: 420,
+                                            overflowY: "auto",
+                                            zIndex: 100,
+                                            boxShadow: "0 12px 35px rgba(0,0,0,0.18)",
+                                            display: "flex",
+                                            flexDirection: "column",
+                                        }}
+                                    >
+                                        <div
+                                            style={{
+                                                padding: "12px 16px",
+                                                borderBottom: "1px solid var(--border)",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "space-between",
+                                                background: "var(--sidebar)",
+                                            }}
+                                        >
+                                            <strong style={{ fontSize: 12 }}>
+                                                Notifications ({notifications.filter((n) => !n.read_at).length})
+                                            </strong>
+                                            {notifications.some((n) => !n.read_at) && (
+                                                <button
+                                                    style={{
+                                                        fontSize: 10,
+                                                        color: "var(--accent)",
+                                                        cursor: "pointer",
+                                                        fontWeight: 550,
+                                                    }}
+                                                    onClick={async () => {
+                                                        await markAllNotificationsRead();
+                                                        setNotifications((prev) =>
+                                                            prev.map((n) => ({
+                                                                ...n,
+                                                                read_at: new Date().toISOString(),
+                                                            }))
+                                                        );
+                                                        toast("All notifications marked as read");
+                                                    }}
+                                                >
+                                                    Mark all read
+                                                </button>
+                                            )}
+                                        </div>
+                                        <div style={{ padding: "4px 0", maxHeight: 320, overflowY: "auto" }}>
+                                            {notifications.length === 0 ? (
+                                                <div style={{ padding: 24, textAlign: "center", color: "var(--muted)", fontSize: 11 }}>
+                                                    You're all caught up! No new notifications.
+                                                </div>
+                                            ) : (
+                                                notifications.map((n) => (
+                                                    <div
+                                                        key={n.id}
+                                                        onClick={async () => {
+                                                            if (!n.read_at) {
+                                                                await markNotificationRead(n.id);
+                                                                setNotifications((prev) =>
+                                                                    prev.map((item) =>
+                                                                        item.id === n.id
+                                                                            ? { ...item, read_at: new Date().toISOString() }
+                                                                            : item
+                                                                    )
+                                                                );
+                                                            }
+                                                            setNotifOpen(false);
+                                                        }}
+                                                        style={{
+                                                            padding: "10px 14px",
+                                                            borderBottom: "1px solid var(--border)",
+                                                            background: !n.read_at ? "var(--soft)" : "transparent",
+                                                            cursor: "pointer",
+                                                            fontSize: 11,
+                                                        }}
+                                                    >
+                                                        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
+                                                            <strong style={{ fontSize: 11.5 }}>{n.title}</strong>
+                                                            <small style={{ fontSize: 9.5 }}>{timeAgo(n.created_at)}</small>
+                                                        </div>
+                                                        <p style={{ margin: 0, color: "var(--muted)", fontSize: 10.5 }}>{n.body}</p>
+                                                    </div>
+                                                ))
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                             <button
                                 className="avatar small-avatar"
                                 aria-label="Your account"
@@ -337,6 +476,14 @@ export default function Workspace({ demo }: { demo: boolean }) {
                         )}
                         {path === "" ? (
                             <Dashboard />
+                        ) : base === "ai" ? (
+                            <AiChatPage />
+                        ) : base === "notes" ? (
+                            <NotesPage />
+                        ) : base === "team" ? (
+                            <TeamPage />
+                        ) : base === "admin" ? (
+                            <AdminPage />
                         ) : base === "profiles" ? (
                             path.split("/")[1] ? (
                                 <ProfileDetail
@@ -373,7 +520,7 @@ export default function Workspace({ demo }: { demo: boolean }) {
                         )}
                         <footer className="workspace-footer">
                             <span>
-                                Thoughtful tools. Meaningful connections.
+                                LB Marriage Bureau · Thoughtful tools. Meaningful connections.
                             </span>
                             <span>
                                 <ShieldCheck size={12} /> Secure bureau

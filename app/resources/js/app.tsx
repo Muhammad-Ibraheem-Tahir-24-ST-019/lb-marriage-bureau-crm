@@ -5,6 +5,10 @@ import { ToastProvider } from "./ui";
 import { PasswordPage } from "./password";
 import Workspace from "./workspace";
 import { Auth, Family, Marketing, PublicBureau, Admin } from "./public";
+import { AiChatPage } from "./ai-chat";
+import { NotesPage } from "./notes";
+import { TeamPage } from "./team";
+import { AdminPage } from "./admin";
 import type { Staff } from "./types";
 class Boundary extends React.Component<
     React.PropsWithChildren,

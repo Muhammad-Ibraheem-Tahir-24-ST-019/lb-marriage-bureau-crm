@@ -13,6 +13,8 @@ import {
     Clock,
     ChevronRight,
     TrendingUp,
+    Bot,
+    Sparkles,
 } from "lucide-react";
 import {
     Area,
@@ -25,10 +27,27 @@ import {
 } from "recharts";
 import { useWorkspace } from "./workspace";
 import { Button, Card, PageHeading, Badge, Empty } from "./ui";
-import { age, date, initials, isDone, pid } from "./lib";
+import { age, date, initials, isDone, pid, sendAiMessage } from "./lib";
 export function Dashboard() {
     const { data, go, open, canWrite } = useWorkspace(),
-        [range, setRange] = useState("6");
+        [range, setRange] = useState("6"),
+        [aiQuery, setAiQuery] = useState(""),
+        [aiResponse, setAiResponse] = useState(""),
+        [aiBusy, setAiBusy] = useState(false);
+    const canUseAi = data.user.can_use_ai !== false;
+
+    const runAiQuick = async (query: string) => {
+        setAiBusy(true);
+        setAiResponse("");
+        try {
+            const res = await sendAiMessage(null, query);
+            setAiResponse(res.message?.content || "Action processed successfully.");
+        } catch (e: any) {
+            setAiResponse("⚠️ " + (e.message || "Failed to contact AI service."));
+        } finally {
+            setAiBusy(false);
+        }
+    };
     const active = data.profiles.filter((p) => p.status === "Active").length,
         pending = data.work.filter(
             (w) => w.kind === "followup" && !isDone(w.status),
@@ -108,6 +127,93 @@ export function Dashboard() {
                     </Button>
                 )}
             </PageHeading>
+            {canUseAi && (
+                <Card style={{ marginBottom: 20, padding: "14px 18px", background: "var(--soft)", border: "1px solid var(--border)" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginBottom: 10 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                            <span style={{ width: 26, height: 26, borderRadius: 6, background: "var(--green-bg)", color: "var(--green)", display: "grid", placeItems: "center" }}>
+                                <Bot size={15} />
+                            </span>
+                            <strong style={{ fontSize: 12 }}>LB Matchmaker AI Assistant</strong>
+                        </div>
+                        <Button variant="ghost" size="sm" onClick={() => go("ai")} style={{ fontSize: 11 }}>
+                            Open in AI Chat <ArrowRight size={13} />
+                        </Button>
+                    </div>
+
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            if (aiQuery.trim()) runAiQuick(aiQuery.trim());
+                        }}
+                        style={{ display: "flex", gap: 8, marginBottom: 10 }}
+                    >
+                        <input
+                            placeholder="Ask AI e.g. 'Summarize today\'s proposals' or 'Find female profiles in Lahore'…"
+                            value={aiQuery}
+                            onChange={(e) => setAiQuery(e.target.value)}
+                            style={{ flex: 1, fontSize: 12 }}
+                            disabled={aiBusy}
+                        />
+                        <Button size="sm" type="submit" disabled={!aiQuery.trim() || aiBusy}>
+                            {aiBusy ? "Thinking…" : "Ask AI"}
+                        </Button>
+                    </form>
+
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                        <span style={{ fontSize: 10.5, color: "var(--muted)" }}>Quick actions:</span>
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => runAiQuick("Generate today's daily report and summary.")}
+                            disabled={aiBusy}
+                            style={{ fontSize: 11, padding: "4px 10px", minHeight: 28 }}
+                        >
+                            <Sparkles size={12} /> Daily Report
+                        </Button>
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => runAiQuick("Show overdue tasks and follow-ups.")}
+                            disabled={aiBusy}
+                            style={{ fontSize: 11, padding: "4px 10px", minHeight: 28 }}
+                        >
+                            Overdue Tasks
+                        </Button>
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => runAiQuick("What meetings are scheduled for today?")}
+                            disabled={aiBusy}
+                            style={{ fontSize: 11, padding: "4px 10px", minHeight: 28 }}
+                        >
+                            Today's Meetings
+                        </Button>
+                    </div>
+
+                    {aiResponse && (
+                        <div
+                            style={{
+                                marginTop: 12,
+                                padding: "12px 14px",
+                                background: "var(--surface)",
+                                border: "1px solid var(--border)",
+                                borderRadius: 8,
+                                fontSize: 12,
+                                lineHeight: 1.6,
+                            }}
+                        >
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                                <strong style={{ fontSize: 11, color: "var(--accent)" }}>AI Response:</strong>
+                                <Button variant="ghost" size="sm" onClick={() => go("ai")} style={{ fontSize: 10, padding: 0 }}>
+                                    Continue in full chat →
+                                </Button>
+                            </div>
+                            <p style={{ margin: 0, whiteSpace: "pre-wrap" }}>{aiResponse}</p>
+                        </div>
+                    )}
+                </Card>
+            )}
             <div className="stats-grid">
                 {stats.map((s) => (
                     <Card key={s.label} className="stat-card">

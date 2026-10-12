@@ -4,6 +4,7 @@
 @import "./public.css";
 @import "./responsive.css";
 @import "./refinements.css";
+@import "./ai-chat.css";
 @source '../js/**/*.tsx';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';

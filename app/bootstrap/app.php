@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Middleware\AdminAccess;
+use App\Http\Middleware\AiAccess;
+use App\Http\Middleware\CrmAccess;
+use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -11,7 +15,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->web(append: [\App\Http\Middleware\SecurityHeaders::class]);
+        $middleware->web(append: [SecurityHeaders::class]);
+
+        $middleware->alias([
+            'ai.access' => AiAccess::class,
+            'admin.access' => AdminAccess::class,
+            'crm.access' => CrmAccess::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(fn ($request, $e) => $request->is('api/*') || $request->expectsJson());
