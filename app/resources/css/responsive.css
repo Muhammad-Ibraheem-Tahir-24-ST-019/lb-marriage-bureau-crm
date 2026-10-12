@@ -1,0 +1,783 @@
+@media (min-width: 1600px) {
+    .main-content {
+        padding-top: 40px;
+    }
+    .activity-chart {
+        height: 255px;
+    }
+    .focus-list {
+        min-height: 270px;
+    }
+    .focus-item {
+        padding: 22px 0;
+    }
+    .stat-card {
+        padding: 24px;
+    }
+    .stat-value {
+        font-size: 35px;
+    }
+}
+@media (max-width: 1200px) {
+    .sidebar {
+        width: 205px;
+        padding-left: 11px;
+        padding-right: 11px;
+    }
+    .workspace {
+        margin-left: 205px;
+    }
+    .topbar {
+        padding: 0 24px;
+    }
+    .main-content {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+    .stats-grid {
+        gap: 12px;
+    }
+    .stat-card {
+        padding: 16px;
+    }
+    .stat-value > span {
+        display: none;
+    }
+    .global-search span,
+    .global-search kbd {
+        display: none;
+    }
+    .dashboard-main-grid,
+    .dashboard-bottom-grid {
+        grid-template-columns: minmax(0, 1.65fr) minmax(240px, 1fr);
+        gap: 15px;
+    }
+    .dashboard-bottom-grid td:nth-child(4),
+    .dashboard-bottom-grid th:nth-child(4) {
+        display: none;
+    }
+    .dashboard-bottom-grid td {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+    .profile-grid,
+    .proposal-grid,
+    .work-grid,
+    .network-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .match-actions .btn {
+        font-size: 10px;
+    }
+    .page-heading h1 {
+        font-size: 26px;
+    }
+    .page-heading .btn {
+        font-size: 11px;
+    }
+    .auth-statement h1 {
+        font-size: 48px;
+    }
+    .auth-aside {
+        padding: 35px;
+    }
+    .marketing-header nav {
+        gap: 16px;
+    }
+    .marketing-header {
+        padding-left: 4%;
+        padding-right: 4%;
+    }
+    .contact-section {
+        gap: 50px;
+    }
+    .hero h1 {
+        font-size: 56px;
+    }
+}
+@media (max-width: 1000px) {
+    .dashboard-main-grid,
+    .dashboard-bottom-grid {
+        grid-template-columns: 1fr;
+    }
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .stat-value > span {
+        display: block;
+    }
+    .detail-layout {
+        grid-template-columns: 220px 1fr;
+        gap: 17px;
+    }
+    .biodata-card {
+        padding: 20px 15px;
+    }
+    .detail-layout .tabs-line {
+        gap: 15px;
+    }
+    .detail-layout .tabs-line button {
+        font-size: 11px;
+    }
+    .match-selector {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    .match-selector .field {
+        min-width: 180px;
+    }
+    .match-selector > div {
+        font-size: 10px;
+    }
+    .settings-layout {
+        grid-template-columns: 165px 1fr;
+        gap: 17px;
+    }
+    .settings-nav button {
+        font-size: 11px;
+    }
+    .role-cards {
+        grid-template-columns: 1fr;
+    }
+    .heading-actions {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+    .connection-banner p {
+        max-width: 300px;
+    }
+    .marketing-header nav {
+        display: none;
+    }
+    .auth-statement h1 {
+        font-size: 42px;
+    }
+    .auth-art {
+        margin-top: 30px;
+    }
+    .mini-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .mini-stats > div:nth-child(2) {
+        border-right: 0;
+    }
+    .mini-stats > div:nth-child(-n + 2) {
+        border-bottom: 1px solid var(--border);
+    }
+    .kanban {
+        gap: 10px;
+    }
+    .kanban-column {
+        padding: 9px;
+    }
+    .kanban .task-card {
+        padding: 13px;
+    }
+    .task-bottom .badge {
+        display: none;
+    }
+}
+@media (max-width: 760px) {
+    body {
+        font-size: 13px;
+    }
+    .sidebar {
+        transform: translateX(-100%);
+        width: 240px;
+        transition: transform 0.2s;
+    }
+    .sidebar.sidebar-open {
+        transform: translateX(0);
+    }
+    .sidebar-backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: #0005;
+        z-index: 29;
+    }
+    .workspace {
+        margin-left: 0;
+    }
+    .topbar {
+        height: 60px;
+        padding: 0 17px;
+    }
+    .mobile-toggle {
+        display: inline-flex;
+    }
+    .breadcrumb {
+        gap: 9px;
+    }
+    .breadcrumb > span:first-of-type,
+    .slash {
+        display: none;
+    }
+    .topbar-actions {
+        gap: 11px;
+    }
+    .theme-switch button {
+        padding: 3px 4px;
+    }
+    .topbar .small-avatar {
+        display: none;
+    }
+    .main-content {
+        padding: 23px 18px 0;
+    }
+    .page-heading {
+        align-items: flex-start;
+        gap: 15px;
+        flex-direction: column;
+        margin-bottom: 22px;
+    }
+    .page-heading h1 {
+        font-size: 27px;
+    }
+    .page-heading p {
+        font-size: 11px;
+    }
+    .heading-actions {
+        justify-content: flex-start;
+    }
+    .stats-grid {
+        gap: 12px;
+        margin-bottom: 19px;
+    }
+    .stat-card {
+        padding: 17px;
+    }
+    .stat-label {
+        font-size: 10px;
+    }
+    .stat-label svg {
+        width: 16px;
+    }
+    .stat-value {
+        font-size: 29px;
+        margin-top: 15px;
+    }
+    .stat-value > span {
+        display: none;
+    }
+    .stat-sub {
+        font-size: 10px;
+        margin-top: 11px;
+    }
+    .activity-chart {
+        height: 200px;
+    }
+    .focus-list {
+        min-height: 0;
+    }
+    .focus-item {
+        padding: 15px 0;
+    }
+    .connection-banner {
+        padding: 18px;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+    .connection-banner > div:nth-child(2) {
+        flex: 1;
+        min-width: 220px;
+    }
+    .connection-banner h3 {
+        font-size: 11px;
+    }
+    .connection-banner p {
+        font-size: 10px;
+    }
+    .connection-banner .btn {
+        margin-left: 54px;
+    }
+    .workspace-footer {
+        font-size: 10px;
+        gap: 20px;
+    }
+    .toolbar {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .search-field {
+        max-width: none;
+        min-width: 160px;
+    }
+    .filters {
+        flex-wrap: wrap;
+    }
+    .filters .field {
+        min-width: 130px;
+        flex: 1;
+    }
+    .profile-grid,
+    .proposal-grid,
+    .work-grid,
+    .network-grid,
+    .match-grid {
+        grid-template-columns: 1fr;
+    }
+    .profile-table th:nth-child(4),
+    .profile-table td:nth-child(4),
+    .profile-table th:nth-child(5),
+    .profile-table td:nth-child(5),
+    .profile-table th:nth-child(7),
+    .profile-table td:nth-child(7) {
+        display: none;
+    }
+    .profile-table th,
+    .profile-table td {
+        padding: 12px 10px;
+    }
+    .profile-table .person strong {
+        font-size: 11px;
+    }
+    .profile-table .person small {
+        font-size: 10px;
+    }
+    .profile-table .avatar {
+        height: 28px;
+        width: 28px;
+        font-size: 10px;
+    }
+    .profile-table td:nth-child(3) {
+        font-size: 10px;
+    }
+    .detail-layout {
+        grid-template-columns: 1fr;
+    }
+    .biodata-card {
+        text-align: left;
+        display: grid;
+        grid-template-columns: 80px 1fr;
+        column-gap: 15px;
+    }
+    .biodata-card > .hero-avatar {
+        grid-row: 1/3;
+    }
+    .biodata-card > h2 {
+        margin: 7px 0 3px;
+    }
+    .biodata-card > .profile-meta,
+    .biodata-card > .completeness,
+    .biodata-card > .tag-list,
+    .biodata-card > .btn {
+        grid-column: 1/3;
+    }
+    .biodata-card > .profile-meta {
+        margin-bottom: 15px;
+        padding-top: 14px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 9px;
+    }
+    .biodata-card .profile-meta > span {
+        font-size: 10px;
+    }
+    .secure-note {
+        padding: 14px 2px;
+    }
+    .biodata-grid {
+        gap: 21px;
+        padding: 22px;
+    }
+    .settings-layout {
+        grid-template-columns: 1fr;
+    }
+    .settings-nav {
+        flex-direction: row;
+        overflow: auto;
+    }
+    .settings-nav button {
+        white-space: nowrap;
+    }
+    .settings-nav button.active {
+        background: var(--soft);
+    }
+    .two-col {
+        grid-template-columns: 1fr;
+    }
+    .kanban {
+        grid-template-columns: 1fr;
+    }
+    .kanban .task-bottom .badge {
+        display: inline-flex;
+    }
+    .agenda-day {
+        grid-template-columns: 80px 1fr;
+        gap: 13px;
+    }
+    .agenda-day > div:nth-child(2) {
+        grid-template-columns: 1fr;
+        min-width: 0;
+    }
+    .mini-stats > div {
+        padding: 18px;
+    }
+    .mini-stats strong {
+        font-size: 24px;
+    }
+    .mini-stats span {
+        font-size: 10px;
+    }
+    .role-cards {
+        gap: 15px;
+    }
+    .match-selector > div {
+        display: none;
+    }
+    .request-row {
+        flex-wrap: wrap;
+    }
+    .request-row > div:first-child {
+        min-width: 200px;
+    }
+    .auth-layout {
+        grid-template-columns: 1fr;
+    }
+    .auth-aside {
+        display: none;
+    }
+    .auth-main {
+        min-height: 100vh;
+        padding: 85px 25px 35px;
+    }
+    .auth-mobile-brand {
+        display: block;
+        margin-bottom: 35px;
+    }
+    .auth-mobile-brand .brand {
+        padding: 0;
+    }
+    .auth-home {
+        right: 25px;
+        top: 25px;
+    }
+    .auth-form {
+        width: 380px;
+    }
+    .marketing-header {
+        padding: 18px 20px;
+        gap: 10px;
+    }
+    .marketing-header .brand {
+        font-size: 20px;
+        padding: 0;
+    }
+    .marketing-header > div > .btn-ghost {
+        display: none;
+    }
+    .marketing-header .btn {
+        font-size: 10px;
+        padding: 9px 10px;
+    }
+    .hero {
+        padding: 55px 20px 0;
+    }
+    .hero h1 {
+        font-size: 42px;
+        letter-spacing: -1.8px;
+    }
+    .hero-kicker {
+        font-size: 10px;
+        letter-spacing: 0.8px;
+    }
+    .hero > p {
+        font-size: 12px;
+    }
+    .hero-actions {
+        flex-direction: column;
+        max-width: 290px;
+        margin: 26px auto 0;
+    }
+    .hero-trust {
+        gap: 12px;
+        flex-wrap: wrap;
+        font-size: 10px;
+        margin-bottom: 35px;
+    }
+    .marketing-preview {
+        grid-template-columns: 1fr;
+    }
+    .preview-sidebar {
+        display: none;
+    }
+    .preview-content {
+        padding: 24px 19px;
+    }
+    .preview-content > h3 {
+        font-size: 20px;
+    }
+    .preview-cards {
+        gap: 8px;
+    }
+    .preview-cards > div {
+        padding: 15px 10px;
+    }
+    .preview-cards strong {
+        font-size: 10px;
+    }
+    .preview-cards small {
+        font-size: 10px;
+    }
+    .preview-flow {
+        font-size: 10px;
+        gap: 4px;
+    }
+    .preview-flow svg {
+        width: 12px;
+    }
+    .marketing-section {
+        padding: 55px 25px;
+    }
+    .marketing-section > h2 {
+        font-size: 29px;
+    }
+    .feature-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px 23px;
+        margin-top: 35px;
+    }
+    .feature-grid h3 {
+        font-size: 13px;
+    }
+    .feature-grid p {
+        font-size: 11px;
+    }
+    .steps-grid {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+    .steps-grid > div {
+        position: relative;
+        padding-left: 48px;
+    }
+    .steps-grid > div > span {
+        position: absolute;
+        left: 0;
+        top: 10px;
+        font-size: 25px;
+    }
+    .steps-grid h3 {
+        margin-top: 10px;
+    }
+    .privacy-section {
+        padding: 50px 25px;
+        gap: 25px;
+        align-items: flex-start;
+    }
+    .privacy-section > svg {
+        height: 50px;
+        width: 50px;
+        margin-top: 30px;
+    }
+    .privacy-section h2 {
+        font-size: 26px;
+    }
+    .privacy-section p {
+        font-size: 11px;
+    }
+    .contact-section {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    .contact-section h2 {
+        font-size: 32px;
+    }
+    .marketing-footer {
+        padding: 25px;
+        flex-wrap: wrap;
+    }
+    .marketing-footer .brand {
+        font-size: 20px;
+    }
+    .marketing-footer > span {
+        display: none;
+    }
+    .family-page > header {
+        padding: 20px;
+    }
+    .family-page > header > span {
+        font-size: 10px;
+    }
+    .family-page .brand {
+        font-size: 20px;
+        padding: 0;
+    }
+    .family-page > main {
+        padding: 25px 15px 45px;
+    }
+    .family-heading {
+        margin: 15px 0 30px;
+    }
+    .family-heading .eyebrow {
+        font-size: 10px;
+    }
+    .family-heading h1 {
+        font-size: 29px;
+    }
+    .family-profile-top {
+        padding: 23px;
+        gap: 15px;
+    }
+    .family-profile-top .hero-avatar {
+        width: 57px;
+        height: 57px;
+        font-size: 18px;
+    }
+    .family-profile-top h2 {
+        font-size: 21px;
+    }
+    .family-profile .biodata-grid {
+        padding: 24px;
+    }
+    .family-response {
+        padding: 24px;
+    }
+    .family-section {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+    .family-response .btn {
+        font-size: 11px;
+    }
+    .family-lock {
+        padding: 25px;
+    }
+    .bureau-public > main {
+        margin: 65px auto;
+    }
+    .bureau-public h1 {
+        font-size: 35px;
+    }
+    .bureau-public .eyebrow {
+        font-size: 10px;
+    }
+    .bureau-public main > p {
+        font-size: 13px;
+    }
+    .admin-page .simple-row {
+        flex-wrap: wrap;
+    }
+    .admin-page .mini-stats {
+        grid-template-columns: 1fr;
+    }
+    .admin-page .mini-stats > div {
+        border-right: 0;
+        border-bottom: 1px solid var(--border);
+    }
+}
+@media (max-width: 480px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    .dialog {
+        max-height: 94dvh;
+        width: calc(100vw - 20px);
+    }
+    .dialog-heading {
+        padding: 20px;
+    }
+    .dialog-body {
+        padding: 20px;
+    }
+    .dialog-footer {
+        padding: 15px 20px;
+    }
+    .dialog-footer > span {
+        display: none;
+    }
+    .dialog-footer {
+        justify-content: flex-end;
+    }
+    .form-tabs {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+    .form-tabs button {
+        font-size: 10px;
+    }
+    .share-fields {
+        grid-template-columns: 1fr;
+    }
+    .table-scroll td {
+        padding: 12px 10px;
+    }
+    .dashboard-bottom-grid th:nth-child(2),
+    .dashboard-bottom-grid td:nth-child(2) {
+        display: none;
+    }
+    .profile-table th:nth-child(3),
+    .profile-table td:nth-child(3) {
+        display: none;
+    }
+    .profile-table th:first-child,
+    .profile-table td:first-child {
+        padding-left: 10px;
+        width: 25px;
+    }
+    .page-heading .heading-actions {
+        width: 100%;
+    }
+    .page-heading .heading-actions > .btn {
+        flex: 1;
+    }
+    .pagination {
+        font-size: 10px;
+        gap: 10px;
+    }
+    .pagination .btn {
+        font-size: 10px;
+        gap: 2px;
+        padding: 6px;
+    }
+    .pagination .btn svg {
+        width: 12px;
+    }
+    .workspace-footer > span:last-child {
+        display: none;
+    }
+    .comparison > div {
+        padding: 18px;
+    }
+    .comparison h2 {
+        font-size: 16px;
+    }
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+    .hero h1 {
+        font-size: 36px;
+    }
+    .marketing-header .btn svg {
+        display: none;
+    }
+    .marketing-header .btn {
+        font-size: 10px;
+    }
+    .hero-trust > span:last-child {
+        display: none;
+    }
+    .family-page > header > span {
+        display: none;
+    }
+    .review-banner {
+        flex-wrap: wrap;
+    }
+    .review-banner > div {
+        flex-basis: 100%;
+    }
+    .file-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .auth-form h1 {
+        font-size: 26px;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+}

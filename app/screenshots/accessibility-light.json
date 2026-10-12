@@ -1,0 +1,38 @@
+[
+  {
+    "path": "",
+    "violations": []
+  },
+  {
+    "path": "profiles",
+    "violations": []
+  },
+  {
+    "path": "matching",
+    "violations": []
+  },
+  {
+    "path": "proposals",
+    "violations": []
+  },
+  {
+    "path": "followups",
+    "violations": []
+  },
+  {
+    "path": "meetings",
+    "violations": []
+  },
+  {
+    "path": "reports",
+    "violations": []
+  },
+  {
+    "path": "staff",
+    "violations": []
+  },
+  {
+    "path": "settings",
+    "violations": []
+  }
+]

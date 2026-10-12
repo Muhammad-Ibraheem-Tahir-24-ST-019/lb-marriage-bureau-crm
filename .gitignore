@@ -1,0 +1,9 @@
+.tools/
+dist/
+app/node_modules/
+app/vendor/
+app/.env
+app/database/*.sqlite*
+app/storage/logs/*
+app/storage/app/private/*
+app/test-results/
