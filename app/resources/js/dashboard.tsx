@@ -114,7 +114,7 @@ export function Dashboard() {
             <PageHeading
                 eyebrow={today}
                 title={`Good ${new Date().getHours() < 12 ? "morning" : new Date().getHours() < 17 ? "afternoon" : "evening"}, ${data.user.name.split(" ")[0]}`}
-                description="Here’s what’s happening at your bureau today."
+                description="Here’s what’s happening at LB Marriage Bureau today."
             >
                 <Button variant="outline" onClick={() => go("reports")}>
                     <ChartIcon />
@@ -233,7 +233,7 @@ export function Dashboard() {
             </div>
             <div className="dashboard-main-grid">
                 <Card
-                    title="Bureau activity"
+                    title="Activity Overview"
                     description="New profiles and proposals over time."
                     action={
                         <select
@@ -482,14 +482,14 @@ export function Dashboard() {
                         {!data.profiles.length && (
                             <Empty
                                 title="Your first connection starts here"
-                                text="Add a profile to start building your bureau’s directory."
+                                text="Add a profile to start building your client directory."
                             />
                         )}
                     </div>
                 </Card>
                 <Card
                     title="Recent activity"
-                    description="Your bureau, at a glance."
+                    description="Recent actions at a glance."
                 >
                     <div className="timeline">
                         {data.activities

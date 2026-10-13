@@ -463,12 +463,6 @@ export default function Workspace({ demo }: { demo: boolean }) {
                         </div>
                     </header>
                     <main className="main-content">
-                        {demo && (
-                            <div className="demo-indicator">
-                                <span />
-                                Demo workspace · All profiles are fictional
-                            </div>
-                        )}
                         {path === "" ? (
                             <Dashboard />
                         ) : base === "ai" ? (

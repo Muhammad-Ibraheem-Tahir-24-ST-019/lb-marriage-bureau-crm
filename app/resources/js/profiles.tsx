@@ -910,7 +910,7 @@ export function ProfileEditor({
             <div className="dialog-footer">
                 <span className="muted">
                     <ShieldCheck size={14} />
-                    Private to your bureau
+                    Confidential & Private
                 </span>
                 <div>
                     <Button type="button" variant="outline" onClick={onDone}>

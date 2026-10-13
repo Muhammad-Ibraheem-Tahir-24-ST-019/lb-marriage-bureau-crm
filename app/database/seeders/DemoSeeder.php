@@ -18,11 +18,11 @@ class DemoSeeder extends Seeder
         if (! app()->environment('local', 'testing') || ! config('app.demo')) {
             throw new \RuntimeException('Demo seeding requires APP_ENV=local and DEMO_MODE=true.');
         }
-        if (Bureau::where('slug', 'noor-demo')->exists()) {
+        if (Bureau::where('slug', 'lb-marriage-bureau')->exists()) {
             return;
         }
         DB::transaction(function () {
-            $b = Bureau::create(['name' => 'Noor Marriage Bureau', 'slug' => 'noor-demo', 'settings' => ['accent' => '#0F766E', 'network' => false, 'city' => 'Lahore', 'about' => 'A fictional demonstration bureau. Thoughtful introductions, built around trust.', 'weights' => ['age' => 30, 'city' => 20, 'education' => 20, 'religion' => 15, 'marital_status' => 15]]]);
+            $b = Bureau::create(['name' => 'LB Marriage Bureau', 'slug' => 'lb-marriage-bureau', 'settings' => ['accent' => '#0F766E', 'network' => false, 'city' => 'Lahore', 'about' => 'LB Marriage Bureau — Dedicated matrimonial introductions and private candidate management.', 'weights' => ['age' => 30, 'city' => 20, 'education' => 20, 'religion' => 15, 'marital_status' => 15]]]);
             $owner = new User;
             $owner->name = 'Amina Khan';
             $owner->email = 'owner@demo.rishtahub.test';

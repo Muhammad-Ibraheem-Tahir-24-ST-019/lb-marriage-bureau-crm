@@ -305,7 +305,7 @@ export function AdminPage() {
     return (
         <>
             <PageHeading
-                eyebrow="System & Bureau Control"
+                eyebrow="System & Company Administration"
                 title="Admin Management"
                 description="Manage team users, monitor system metrics, and configure AI intelligence models."
             />

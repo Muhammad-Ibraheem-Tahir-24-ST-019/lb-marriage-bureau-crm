@@ -204,8 +204,8 @@ export function NotesPage() {
         <>
             <PageHeading
                 eyebrow="Matchmaking intelligence"
-                title="Bureau Notes"
-                description="Keep track of personal observations, family conversations, and matchmaking insights."
+                title="Internal Notes"
+                description="Keep track of client observations, family conversations, and matchmaking insights."
             >
                 <Button onClick={openCreateDialog}>
                     <Plus size={16} />

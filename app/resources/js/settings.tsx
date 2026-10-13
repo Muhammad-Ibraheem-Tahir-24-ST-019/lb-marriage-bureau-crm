@@ -47,7 +47,7 @@ export function SettingsPage() {
         try {
             await api("/settings", "PUT", form);
             await refresh();
-            toast("Bureau settings saved");
+            toast("Settings saved successfully");
         } catch (e: any) {
             setError(e.message);
         } finally {
@@ -57,20 +57,9 @@ export function SettingsPage() {
     return (
         <>
             <PageHeading
-                title="Bureau settings"
-                description="Make the workspace yours. Keep privacy at the center."
-            >
-                <Button variant="outline" asChild>
-                    <a
-                        href={"/bureau/" + data.bureau.slug}
-                        target="_blank"
-                        rel="noreferrer"
-                    >
-                        View public page
-                        <ArrowUpRight size={15} />
-                    </a>
-                </Button>
-            </PageHeading>
+                title="System Settings"
+                description="Configure LB Marriage Bureau preferences, matching algorithm weights, and message templates."
+            />
             <div className="settings-layout">
                 <div className="settings-nav">
                     {[
@@ -93,17 +82,17 @@ export function SettingsPage() {
                     {!owner && (
                         <div className="notice">
                             <LockKeyhole size={18} />
-                            Only the bureau owner can change these settings.
+                            Only administrators can modify these settings.
                         </div>
                     )}
                     <fieldset disabled={!owner || busy}>
                         {tab === "General" && (
                             <Card
-                                title="Bureau identity"
-                                description="These details appear on your public bureau page."
+                                title="Organization Details"
+                                description="Company branding and contact details for LB Marriage Bureau."
                             >
                                 <div className="dialog-body stack">
-                                    <Field label="Bureau name">
+                                    <Field label="Company / Bureau name">
                                         <input
                                             required
                                             value={form.name}
@@ -167,7 +156,7 @@ export function SettingsPage() {
                                             </div>
                                         </Field>
                                     </div>
-                                    <Field label="About your bureau">
+                                    <Field label="About LB Marriage Bureau">
                                         <textarea
                                             rows={4}
                                             value={form.settings.about || ""}
@@ -176,7 +165,7 @@ export function SettingsPage() {
                                             }
                                         />
                                     </Field>
-                                    <Field label="Bureau address">
+                                    <Field label="Office address">
                                         <textarea
                                             value={form.settings.address || ""}
                                             onChange={(e) =>
@@ -266,8 +255,8 @@ export function SettingsPage() {
                         )}
                         {tab === "Message templates" && (
                             <Card
-                                title="Your bureau’s message template"
-                                description="A reusable message for family conversations. Copy and personalize it before sending."
+                                title="Family Outreach Message Template"
+                                description="Standard message template for family proposals and follow-ups. Personalize before sending."
                             >
                                 <div className="dialog-body stack">
                                     <Field label="Message">
