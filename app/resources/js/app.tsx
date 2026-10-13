@@ -4,11 +4,7 @@ import { createInertiaApp } from "@inertiajs/react";
 import { ToastProvider } from "./ui";
 import { PasswordPage } from "./password";
 import Workspace from "./workspace";
-import { Auth, Family, Marketing, PublicBureau, Admin } from "./public";
-import { AiChatPage } from "./ai-chat";
-import { NotesPage } from "./notes";
-import { TeamPage } from "./team";
-import { AdminPage } from "./admin";
+import { Auth, Family } from "./public";
 import type { Staff } from "./types";
 class Boundary extends React.Component<
     React.PropsWithChildren,
@@ -41,7 +37,6 @@ class Boundary extends React.Component<
 function App({
     user,
     demo,
-    publicBureau,
 }: {
     user: Staff | null;
     demo: boolean;
@@ -54,26 +49,14 @@ function App({
                 {path === "/forgot-password" ||
                 path.startsWith("/reset-password/") ? (
                     <PasswordPage />
-                ) : publicBureau ? (
-                    <PublicBureau bureau={publicBureau} />
                 ) : path.startsWith("/share/") ? (
                     <Family token={path.split("/")[2]} />
                 ) : path.startsWith("/invite/") ? (
                     <Auth invite={path.split("/")[2]} />
-                ) : path === "/login" || path === "/register" ? (
-                    <Auth register={path === "/register"} demo={demo} />
-                ) : path.startsWith("/app") ? (
-                    user ? (
-                        user.role === "superadmin" ? (
-                            <Admin />
-                        ) : (
-                            <Workspace demo={demo} />
-                        )
-                    ) : (
-                        <Auth demo={demo} />
-                    )
+                ) : user ? (
+                    <Workspace demo={demo} />
                 ) : (
-                    <Marketing user={user} />
+                    <Auth demo={demo} />
                 )}
             </ToastProvider>
         </Boundary>

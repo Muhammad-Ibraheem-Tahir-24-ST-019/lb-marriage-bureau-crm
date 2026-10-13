@@ -75,7 +75,7 @@ export function SettingsPage() {
                 <div className="settings-nav">
                     {[
                         "General",
-                        "Privacy & network",
+                        "Privacy & Security",
                         "Matching preferences",
                         "Message templates",
                     ].map((t) => (
@@ -187,48 +187,12 @@ export function SettingsPage() {
                                 </div>
                             </Card>
                         )}
-                        {tab === "Privacy & network" && (
+                        {tab === "Privacy & Security" && (
                             <Card
                                 title="Privacy comes first"
-                                description="Your private profiles are never listed on a public directory."
+                                description="Your private candidate profiles are strictly confidential and never listed publicly."
                             >
                                 <div className="dialog-body stack">
-                                    <div className="setting-row">
-                                        <div>
-                                            <h3>
-                                                Participate in the bureau
-                                                network
-                                            </h3>
-                                            <p>
-                                                Other participating bureaus can
-                                                see profile IDs, gender, city,
-                                                and age bands for active,
-                                                consented profiles. Names,
-                                                photos, contacts, and notes
-                                                remain private.
-                                            </p>
-                                        </div>
-                                        <input
-                                            aria-label="Enable bureau network"
-                                            type="checkbox"
-                                            role="switch"
-                                            checked={form.settings.network}
-                                            onChange={(e) =>
-                                                set("network", e.target.checked)
-                                            }
-                                        />
-                                    </div>
-                                    <div className="notice">
-                                        <ShieldCheck size={20} />
-                                        <span>
-                                            Enable only when consent covers
-                                            network discovery. Accepting an
-                                            introduction does not automatically
-                                            expose private biodata. Create a
-                                            separate controlled share link when
-                                            appropriate.
-                                        </span>
-                                    </div>
                                     <div className="setting-row">
                                         <div>
                                             <h3>Private file access</h3>
@@ -589,206 +553,6 @@ export function StaffPage() {
     );
 }
 export function NetworkPage() {
-    const { data, go, owner, canWrite } = useWorkspace(),
-        toast = useToast();
-    const [network, setNetwork] = useState<any>(null),
-        [error, setError] = useState(""),
-        [target, setTarget] = useState<any>(null),
-        [message, setMessage] = useState(""),
-        [busy, setBusy] = useState(false);
-    const load = () =>
-        api("/network")
-            .then(setNetwork)
-            .catch((e) => setError(e.message));
-    useEffect(() => {
-        load();
-    }, []);
-    const send = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setBusy(true);
-        try {
-            await api("/introductions", "POST", {
-                profile_id: target.id,
-                message,
-            });
-            setTarget(null);
-            await load();
-            toast("Introduction requested");
-        } catch (e: any) {
-            toast(e.message, true);
-        } finally {
-            setBusy(false);
-        }
-    };
-    const respond = async (id: number, status: string) => {
-        try {
-            await api("/introductions/" + id, "PUT", { status });
-            await load();
-            toast("Introduction " + status.toLowerCase());
-        } catch (e: any) {
-            toast(e.message, true);
-        }
-    };
-    return (
-        <>
-            <PageHeading
-                eyebrow="Better, together"
-                title="Bureau network"
-                description="Discover possibilities beyond your directory, without exposing private biodata."
-            />
-            <ErrorBox message={error} />
-            {!network ? (
-                <Loading />
-            ) : !network.enabled ? (
-                <Card>
-                    <Empty
-                        title="Your bureau is private by default"
-                        text="Opt in to discover anonymous availability from other participating bureaus. Names, contact details, and photos are never listed."
-                        action={
-                            owner && (
-                                <Button onClick={() => go("settings")}>
-                                    Manage network privacy
-                                    <ArrowUpRight size={15} />
-                                </Button>
-                            )
-                        }
-                    />
-                </Card>
-            ) : (
-                <>
-                    <div className="notice">
-                        <ShieldCheck size={20} />
-                        <span>
-                            Only approximate age, city, gender, and a reference
-                            ID are visible. An accepted introduction requires a
-                            separate, deliberate sharing step.
-                        </span>
-                    </div>
-                    <div className="network-grid">
-                        {network.listings.map((p: any) => (
-                            <Card key={p.id} className="network-card">
-                                <span className="square-icon">
-                                    <Building2 size={22} />
-                                </span>
-                                <h3>{p.bureau}</h3>
-                                <p>
-                                    {pid(p.id)} ·{" "}
-                                    {p.gender === "Female" ? "Bride" : "Groom"}
-                                </p>
-                                <div className="network-info">
-                                    <span>
-                                        <MapPin size={15} />
-                                        {p.city}
-                                    </span>
-                                    <span>
-                                        Age {p.age_band || "not specified"}
-                                    </span>
-                                </div>
-                                {canWrite && (
-                                    <Button
-                                        variant="outline"
-                                        onClick={() => {
-                                            setTarget(p);
-                                            setMessage("");
-                                        }}
-                                    >
-                                        Request introduction
-                                        <ArrowUpRight size={15} />
-                                    </Button>
-                                )}
-                            </Card>
-                        ))}
-                    </div>
-                    {!network.listings.length && (
-                        <Card>
-                            <Empty
-                                title="No network listings yet"
-                                text="Profiles appear when other bureaus opt in to network discovery."
-                            />
-                        </Card>
-                    )}
-                </>
-            )}
-            {network?.requests?.length > 0 && (
-                <Card
-                    title="Introduction requests"
-                    description="Incoming and outgoing conversations."
-                    className="mt-20"
-                >
-                    {network.requests.map((r: any) => (
-                        <div className="request-row" key={r.id}>
-                            <div>
-                                <strong>
-                                    {r.target_bureau_id === data.bureau.id
-                                        ? "From " + r.from_bureau
-                                        : "To " + r.to_bureau}
-                                </strong>
-                                <small>
-                                    {pid(r.profile_id)} · {date(r.created_at)}
-                                </small>
-                                <p>{r.message}</p>
-                                {r.status === "Accepted" && (
-                                    <small>
-                                        Introduction accepted. Coordinate a
-                                        consented, private share link with the
-                                        other bureau.
-                                    </small>
-                                )}
-                            </div>
-                            <Badge>{r.status}</Badge>
-                            {r.target_bureau_id === data.bureau.id &&
-                                r.status === "Pending" &&
-                                owner && (
-                                    <div className="toolbar">
-                                        <Button
-                                            size="sm"
-                                            onClick={() =>
-                                                respond(r.id, "Accepted")
-                                            }
-                                        >
-                                            Accept
-                                        </Button>
-                                        <Button
-                                            size="sm"
-                                            variant="outline"
-                                            onClick={() =>
-                                                respond(r.id, "Rejected")
-                                            }
-                                        >
-                                            Decline
-                                        </Button>
-                                    </div>
-                                )}
-                        </div>
-                    ))}
-                </Card>
-            )}
-            <Modal
-                open={!!target}
-                onClose={() => setTarget(null)}
-                title="Request an introduction"
-                description="Send a short message to the owning bureau. Do not include private family information."
-            >
-                <form onSubmit={send}>
-                    <div className="dialog-body">
-                        <Field label="Message">
-                            <textarea
-                                required
-                                rows={5}
-                                value={message}
-                                onChange={(e) => setMessage(e.target.value)}
-                                placeholder="We may have a compatible profile. Could we discuss an introduction?"
-                            />
-                        </Field>
-                    </div>
-                    <div className="dialog-footer">
-                        <span />
-                        <Button disabled={busy}>
-                            {busy ? "Sending…" : "Send request"}
-                        </Button>
-                    </div>
-                </form>
-            </Modal>
-        </>
-    );
+    return null;
 }
+

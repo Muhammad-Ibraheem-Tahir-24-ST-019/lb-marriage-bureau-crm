@@ -45,7 +45,6 @@ export function Brand() {
     );
 }
 export function Auth({
-    register = false,
     demo = false,
     invite,
 }: {
@@ -55,7 +54,6 @@ export function Auth({
 }) {
     const [form, setForm] = useState({
             name: "",
-            bureau: "",
             email: "",
             password: "",
             password_confirmation: "",
@@ -70,9 +68,7 @@ export function Auth({
             await api(
                 invite
                     ? "/invite/" + invite
-                    : register
-                      ? "/register"
-                      : "/login",
+                    : "/login",
                 "POST",
                 form,
             );
@@ -89,45 +85,41 @@ export function Auth({
                 <Brand />
                 <div className="auth-statement">
                     <div className="eyebrow">
-                        THOUGHTFUL TOOLS. MEANINGFUL CONNECTIONS.
+                        LB MARRIAGE BUREAU CRM
                     </div>
                     <h1>
-                        A little less admin.
-                        <br />A lot more
+                        Dedicated Staff
+                        <br />& Consultant
                         <br />
-                        <em>possibility.</em>
+                        <em>Portal.</em>
                     </h1>
                     <p>
-                        Your people, profiles, and conversations.
+                        Internal workspace for candidate biodata,
                         <br />
-                        Together in one private workspace.
+                        matchmaking, and family proposals.
                     </p>
                     <div className="auth-art">
                         <div className="art-card">
-                            <span className="avatar avatar-rose">AK</span>
+                            <span className="avatar avatar-rose">LB</span>
                             <div>
-                                <strong>A thoughtful introduction</strong>
-                                <small>Shared privately · With care</small>
+                                <strong>LB Marriage Bureau</strong>
+                                <small>Private Matrimonial CRM</small>
                             </div>
                             <CheckCircle2 size={22} />
                         </div>
                         <div className="art-line" />
                         <div className="art-note">
                             <HeartHandshake size={20} />
-                            <span>Built around human connection.</span>
+                            <span>Built for thoughtful introductions.</span>
                         </div>
                     </div>
                 </div>
                 <div className="auth-foot">
                     <ShieldCheck size={16} />
-                    Privacy is part of every introduction.
+                    Private internal management system.
                 </div>
             </div>
             <div className="auth-main">
-                <a className="auth-home" href="/">
-                    Back to home
-                    <ArrowUpRight size={14} />
-                </a>
                 <div className="auth-form">
                     <div className="auth-mobile-brand">
                         <Brand />
@@ -137,21 +129,17 @@ export function Auth({
                     </span>
                     <h1>
                         {invite
-                            ? "Join your bureau"
-                            : register
-                              ? "Your next chapter starts here."
-                              : "Welcome back."}
+                            ? "Join LB Marriage Bureau"
+                            : "Welcome back."}
                     </h1>
                     <p>
                         {invite
                             ? "Create your password to accept the staff invitation."
-                            : register
-                              ? "Create a private workspace for your marriage bureau."
-                              : "Sign in to your bureau workspace."}
+                            : "Sign in to the LB Marriage Bureau CRM."}
                     </p>
                     <form onSubmit={submit} className="stack">
                         <ErrorBox message={error} />
-                        {(register || invite) && (
+                        {invite && (
                             <Field label="Your full name">
                                 <input
                                     autoComplete="name"
@@ -161,20 +149,6 @@ export function Auth({
                                         setForm({
                                             ...form,
                                             name: e.target.value,
-                                        })
-                                    }
-                                />
-                            </Field>
-                        )}
-                        {register && (
-                            <Field label="Bureau name">
-                                <input
-                                    required
-                                    value={form.bureau}
-                                    onChange={(e) =>
-                                        setForm({
-                                            ...form,
-                                            bureau: e.target.value,
                                         })
                                     }
                                 />
@@ -193,14 +167,14 @@ export function Auth({
                                             email: e.target.value,
                                         })
                                     }
-                                    placeholder="you@yourbureau.com"
+                                    placeholder="staff@lbmarriagebureau.com"
                                 />
                             </Field>
                         )}
                         <Field
                             label="Password"
                             hint={
-                                register || invite
+                                invite
                                     ? "At least 12 characters, including letters and numbers."
                                     : undefined
                             }
@@ -208,11 +182,11 @@ export function Auth({
                             <input
                                 type="password"
                                 autoComplete={
-                                    register || invite
+                                    invite
                                         ? "new-password"
                                         : "current-password"
                                 }
-                                minLength={register || invite ? 12 : undefined}
+                                minLength={invite ? 12 : undefined}
                                 required
                                 value={form.password}
                                 onChange={(e) =>
@@ -223,7 +197,7 @@ export function Auth({
                                 }
                             />
                         </Field>
-                        {(register || invite) && (
+                        {invite && (
                             <Field label="Confirm password">
                                 <input
                                     type="password"
@@ -245,28 +219,16 @@ export function Auth({
                                 ? "Please wait…"
                                 : invite
                                   ? "Accept invitation"
-                                  : register
-                                    ? "Create bureau account"
-                                    : "Sign in"}
+                                  : "Sign in"}
                             <ArrowRight size={16} />
                         </Button>
                     </form>
-                    {!register && !invite && (
+                    {!invite && (
                         <a className="forgot-link" href="/forgot-password">
                             Forgot password?
                         </a>
                     )}
-                    {!invite && (
-                        <p className="auth-switch">
-                            {register
-                                ? "Already have an account?"
-                                : "New to LB Marriage Bureau?"}{" "}
-                            <a href={register ? "/login" : "/register"}>
-                                {register ? "Sign in" : "Create your bureau account"}
-                            </a>
-                        </p>
-                    )}
-                    {demo && !register && !invite && (
+                    {demo && !invite && (
                         <div className="demo-login">
                             <Badge>Local demo</Badge>
                             <p>Explore with fictional profiles.</p>

@@ -6,7 +6,6 @@ import {
     Send,
     CalendarClock,
     CalendarDays,
-    Network,
     ChartNoAxesCombined,
     Settings,
     Search,
@@ -51,7 +50,7 @@ import {
     WorkPage,
     WorkForm,
 } from "./workflow";
-import { SettingsPage, StaffPage, NetworkPage } from "./settings";
+import { SettingsPage, StaffPage } from "./settings";
 import { AiChatPage } from "./ai-chat";
 import { NotesPage } from "./notes";
 import { TeamPage } from "./team";
@@ -172,7 +171,6 @@ export default function Workspace({ demo }: { demo: boolean }) {
         [
             "Organization",
             [
-                ["Bureau network", Network, "network"],
                 ["Reports", ChartNoAxesCombined, "reports"],
                 ["Staff & roles", Users, "staff"],
                 ...(["admin", "superadmin", "owner"].includes(data.user.role)
@@ -261,9 +259,6 @@ export default function Workspace({ demo }: { demo: boolean }) {
                                             <span className="nav-count">
                                                 {count}
                                             </span>
-                                        )}
-                                        {url === "network" && (
-                                            <span className="nav-new">NEW</span>
                                         )}
                                     </button>
                                 ))}
@@ -506,8 +501,6 @@ export default function Workspace({ demo }: { demo: boolean }) {
                             <SettingsPage />
                         ) : base === "staff" ? (
                             <StaffPage />
-                        ) : base === "network" ? (
-                            <NetworkPage />
                         ) : (
                             <Empty
                                 title="Page not found"

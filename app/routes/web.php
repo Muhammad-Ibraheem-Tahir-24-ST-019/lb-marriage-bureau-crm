@@ -27,7 +27,7 @@ Route::post('/api/contact', function (Request $r) {
     return ['ok' => true];
 })->middleware('throttle:3,10');
 Route::post('/api/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
-Route::post('/api/register', [AuthController::class, 'register'])->middleware('throttle:5,10');
+Route::post('/api/register', fn () => response()->json(['message' => 'Registration is disabled. Staff accounts are managed by administrators.'], 403));
 Route::post('/api/forgot-password', [AuthController::class, 'forgot'])->middleware('throttle:3,10');
 Route::post('/api/reset-password', [AuthController::class, 'reset'])->middleware('throttle:5,10');
 Route::get('/reset-password/{token}', fn () => Inertia::render('App', ['user' => null, 'demo' => false]))->name('password.reset');
@@ -119,9 +119,5 @@ Route::middleware(['auth'])->group(function () {
 // Invite acceptance (public)
 Route::post('/api/invite/accept', [AuthController::class, 'acceptInvite']);
 
-Route::get('/bureau/{slug}', function (string $slug) {
-    $b = Bureau::where('slug', $slug)->where('status', 'active')->firstOrFail();
-
-    return Inertia::render('App', ['publicBureau' => ['name' => $b->name, 'settings' => array_intersect_key($b->settings ?? [], array_flip(['about', 'city', 'phone', 'website']))], 'user' => null]);
-});
-Route::get('/{path?}', fn () => Inertia::render('App', ['user' => auth()->user()?->only(['id', 'name', 'email', 'role']), 'demo' => config('app.demo',false)]))->where('path','^(?!api(?:/|$)).*')->name('login');
+Route::get('/bureau/{slug}', fn () => redirect('/'));
+Route::get('/{path?}', fn () => Inertia::render('App', ['user' => auth()->user()?->only(['id', 'name', 'email', 'role', 'can_use_ai']), 'demo' => config('app.demo', false)]))->where('path', '^(?!api(?:/|$)).*')->name('login');
